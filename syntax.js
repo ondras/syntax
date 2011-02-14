@@ -28,7 +28,7 @@ var Syntax = {
 			if (!r) { continue; }
 			var name = r[1];
 			if (!(name in this._registry)) {
-				if (window.console && window.console.warn) { console.warn("No patterns for "+name); }
+				if (window.console) { console.warn("No patterns for "+name); }
 				continue;
 			} 
 			if (todo.indexOf(name) == -1) { todo.push(name); }
