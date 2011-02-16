@@ -3,13 +3,13 @@
 	
 	patterns.push({
 		token: "comment",
-		re: /(&lt;!--.*?--&gt;)/g,
+		re: /(&lt;!--[\s\S]*?--&gt;)/g,
 		index: 1
 	});
 
 	patterns.push({
 		token: "keyword",
-		re: /(&lt;[a-z\/].*?&gt;)/ig,
+		re: /(&lt;[a-z\/][\s\S]*?&gt;)/ig,
 		index: 1
 	});
 
@@ -19,5 +19,5 @@
 		index: 2
 	});
 
-	Syntax.register("html", patterns);
+	Syntax.register("xml", patterns);
 })();
