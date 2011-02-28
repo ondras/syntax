@@ -9,7 +9,7 @@
 	
 	patterns.push({
 		token: "number",
-		re: /([^0-9#a-zA-Z])([0-9]+)/g,
+		re: /([^0-9#a-z])([0-9-]+(\.[0-9]+)?)/ig,
 		index: 2
 	});
 

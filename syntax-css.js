@@ -3,21 +3,21 @@
 	
 	patterns.push({
 		token: "comment",
-		re: /(&lt;!--[\s\S]*?--&gt;)/g,
+		re: /(\/\*[\s\S]*?\*\/)/g,
 		index: 1
 	});
 
 	patterns.push({
 		token: "keyword",
-		re: /(&lt;[a-z\/\?!][\s\S]*?&gt;)/ig,
+		re: /^([^{\n]+)(?=\s*{)/gm,
 		index: 1
 	});
 
 	patterns.push({
 		token: "string",
-		re: /(=)(".*?")/g,
+		re: /(: \s*)([^;\n]+)/g,
 		index: 2
 	});
 
-	Syntax.register("xml", patterns);
+	Syntax.register("css", patterns);
 })();

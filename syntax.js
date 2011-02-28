@@ -33,6 +33,7 @@ var Syntax = {
 			} 
 			if (todo.indexOf(name) == -1) { todo.push(name); }
 		}
+		if (!todo.length) { return; }
 
 		var code = node.innerHTML;
 		while (todo.length) {
