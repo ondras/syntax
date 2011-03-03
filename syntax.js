@@ -1,66 +1,110 @@
 var Syntax = {
-	_registry: {},
-	tags: ["pre", "code"],
+	base: "", /* base path */
 	tab: "    ",
 	
-	all: function() { /* apply to all elements */
+	_registry: {},
+	_todo: {},
+
+	/* apply to all elements */
+	all: function() { 
 		var all = document.getElementsByTagName("*");
 		var todo = [];
 		for (var i=0;i<all.length;i++) {
 			var node = all[i];
-			if (this.tags.indexOf(node.nodeName.toLowerCase()) != -1) { todo.push(node); }
+			if (node.getAttribute("data-syntax")) { todo.push(node); }
 		}
 		
 		while (todo.length) { this.apply(todo.shift()); }
 	},
 	
+	/* apply to one element */
+	apply: function(node) {
+		var syntax = node.getAttribute("data-syntax");
+		if (syntax in this._registry) { /* apply */
+			this._process(node, syntax);
+		} else { /* defer */
+			if (!(this._todo[syntax])) { /* append syntax script */
+				this._todo[syntax] = [];
+				this._append(syntax);
+			}
+			this._todo[syntax].push(node);
+		}
+	},
+
+	/* register new patterns */
 	register: function(name, patterns) {
 		this._registry[name] = patterns;
 	},
 	
-	apply: function(node) {
-		/* scan class for names */
-		var cns = node.className.split(" ");
-		var todo = [];
-		while (cns.length) {
-			var cn = cns.shift();
-			var r = cn.match(/syntax-(.+)/);
-			if (!r) { continue; }
-			var name = r[1];
-			if (!(name in this._registry)) {
-				if (window.console) { console.warn("No patterns for "+name); }
-				continue;
-			} 
-			if (todo.indexOf(name) == -1) { todo.push(name); }
+	init: function() {
+		var scripts = document.getElementsByTagName("script");
+		for (var i=0;i<scripts.length;i++) {
+			var s = scripts[i];
+			if (s.src.match(/syntax\.js$/)) {
+				var parts = s.src.split("/");
+				parts.pop();
+				this.base = parts.join("/") + "/";
+			}
 		}
-		if (!todo.length) { return; }
+	},
+	
+	/* apply a set of patterns to a node */
+	_process: function(node, syntax) {
+		var patterns = this._registry[syntax];
+		node.className += " syntax-"+syntax;
 
 		var code = node.innerHTML;
-		while (todo.length) {
-			var patterns = this._registry[todo.shift()];
-			for (var i=0;i<patterns.length;i++) {
-				var pattern = patterns[i];
-				var index = pattern.index;
-				var replacement = "";
-				if (index > 1) { 
-					for (var j=1;j<index;j++) { replacement += "$"+j; }
-				}
-				replacement += "<span class='"+pattern.token+"'>$"+index+"</span>";
-				
-				code = code.replace(pattern.re, replacement);
+
+		for (var i=0;i<patterns.length;i++) {
+			var pattern = patterns[i];
+			var index = pattern.index;
+			var replacement = "";
+			if (index > 1) { 
+				for (var j=1;j<index;j++) { replacement += "$"+j; }
 			}
+			replacement += "<span class='"+pattern.token+"'>$"+index+"</span>";
+			
+			code = code.replace(pattern.re, replacement);
 		}
 		
 		code = code.replace(/\t/g, this.tab);
 
-		if (node.outerHTML) {
+		if (node.outerHTML) { /* IE hack; innerHTML normalizes whitespace */
 			var name = node.nodeName;
 			var id = node.id;
 			var cn = node.className;
 			node.outerHTML = "<" + name + " id='"+id+"' class='"+cn+"'>" + code + "</"+name+">";
+			node.setAttribute("data-syntax", syntax);
 		} else {
 			node.innerHTML = code;
 		}
-
+	},
+	
+	_append: function(syntax) {
+		var s = document.createElement("script");
+		s.src = this.base + "syntax-"+syntax+".js";
+		document.body.insertBefore(s, document.body.firstChild);
+		
+		var thisp = this;
+		var loaded = function() { thisp._loaded(); }
+		
+		if (s.addEventListener) {
+			s.addEventListener("load", loaded, false);
+		} else {
+			s.attachEvent("readystatechange", loaded);
+		}
+	},
+	
+	_loaded: function() {
+		for (var syntax in this._registry) {
+			if (!(syntax in this._todo)) { continue; }
+			while (this._todo[syntax].length) {
+				this._process(this._todo[syntax].shift(), syntax);
+			}
+			delete this._todo[syntax];
+		}
 	}
-}
+};
+
+Syntax.init();
+
