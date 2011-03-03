@@ -83,7 +83,6 @@ var Syntax = {
 	_append: function(syntax) {
 		var s = document.createElement("script");
 		s.src = this.base + "syntax-"+syntax+".js";
-		document.body.insertBefore(s, document.body.firstChild);
 		
 		var thisp = this;
 		var loaded = function() { thisp._loaded(); }
@@ -91,8 +90,10 @@ var Syntax = {
 		if (s.addEventListener) {
 			s.addEventListener("load", loaded, false);
 		} else {
-			s.attachEvent("readystatechange", loaded);
+			s.attachEvent("onreadystatechange", loaded);
 		}
+
+		document.body.insertBefore(s, document.body.firstChild);
 	},
 	
 	_loaded: function() {
