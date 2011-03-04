@@ -40,11 +40,8 @@ var Syntax = {
 		var scripts = document.getElementsByTagName("script");
 		for (var i=0;i<scripts.length;i++) {
 			var s = scripts[i];
-			if (s.src.match(/syntax\.js$/)) {
-				var parts = s.src.split("/");
-				parts.pop();
-				this.base = parts.join("/") + "/";
-			}
+			var r = s.src.match(/^(.*)syntax\.js$/);
+			if (r) { this.base = r[1]; }
 		}
 	},
 	
