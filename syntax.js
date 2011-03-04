@@ -50,7 +50,9 @@ var Syntax = {
 		var patterns = this._registry[syntax];
 		node.className += " syntax-"+syntax;
 
-		var code = node.innerHTML;
+		var code = "";
+		/* IE normalizes innerHTML; need to get text content via nodeValues */
+		for (var i=0;i<node.childNodes.length;i++) { code += node.childNodes[i].nodeValue || ""; }
 
 		for (var i=0;i<patterns.length;i++) {
 			var pattern = patterns[i];
@@ -67,11 +69,18 @@ var Syntax = {
 		code = code.replace(/\t/g, this.tab);
 
 		if (node.outerHTML) { /* IE hack; innerHTML normalizes whitespace */
-			var name = node.nodeName;
-			var id = node.id;
-			var cn = node.className;
-			node.outerHTML = "<" + name + " id='"+id+"' class='"+cn+"'>" + code + "</"+name+">";
-			node.setAttribute("data-syntax", syntax);
+			node.innerHTML = "";
+			
+			var tmp = document.createElement("div");
+			tmp.style.display = "none";
+			document.body.insertBefore(tmp, document.body.firstChild);
+			
+			var pre = document.createElement("pre");
+			tmp.appendChild(pre);
+			pre.outerHTML = "<pre>" + code + "</pre>";
+			
+			while (tmp.firstChild.firstChild) { node.appendChild(tmp.firstChild.firstChild); }
+			tmp.parentNode.removeChild(tmp);
 		} else {
 			node.innerHTML = code;
 		}
