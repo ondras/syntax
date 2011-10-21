@@ -1,4 +1,4 @@
-(function(){
+;(function(){
 	var patterns = [];
 	
 	patterns.push({
@@ -30,14 +30,12 @@
 		"switch", "this", "throw", "try", "typeof", "var", "void", "while", "with", "__proto__",
 		"true", "false", "null", "NaN", "prototype", "call", "apply", "constructor"];
 
-	for (var i=0;i<keywords.length;i++) {
-		var kw = new RegExp("(^|\\s|\\.|\\()("+keywords[i]+")(?=\\s|\\.|\\(|\\)|\\[|\\]|;|$|,)","g");
-		patterns.push({
-			token: "keyword",
-			re: kw,
-			index: 2
-		});
-	}
+	var kw = new RegExp("(^|\\s|\\.|\\()("+keywords.join("|")+")(?=\\s|\\.|\\(|\\)|\\[|\\]|;|$|,)","gm");
+	patterns.push({
+		token: "keyword",
+		re: kw,
+		index: 2
+	});
 
 	Syntax.register("js", patterns);
 })();
