@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Syntax demo</title>
+		<link rel="stylesheet" href="syntax.css" />
+		<script src="syntax.js"></script>
+	</head>
+	<body>
+
+<pre data-syntax="xml">
+&lt;!-- comment --&gt;
+&lt;div id="test" class="class"&gt;This is a test.&lt;/div&gt;
+</pre>
+
+<pre data-syntax="js">
+/* sample code */
+Function.prototype.lol = function(context) {
+	var func = this;
+	return function() {
+		return func.call(context, ":-)"); 
+	}
+}
+</pre>
+
+<pre data-syntax="css">
+/* css */
+#id .class {
+	color: red;
+	font-size: 13px;
+}
+</pre>
+
+<script>Syntax.all();</script>
+	</body>
+</html>
