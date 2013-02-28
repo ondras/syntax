@@ -8,6 +8,12 @@
 	});
 	
 	patterns.push({
+		token: "string",
+		re: /('.*?')/g,
+		index: 1
+	});
+	
+	patterns.push({
 		token: "number",
 		re: /([^0-9#a-z])(-?[0-9]+(\.[0-9]+)?)/ig,
 		index: 2
