@@ -3,13 +3,13 @@
 	
 	patterns.push({
 		token: "string",
-		re: /(".*?")/g,
+		re: /('.*?')/g,
 		index: 1
 	});
 	
 	patterns.push({
 		token: "string",
-		re: /('.*?')/g,
+		re: /(".*?")/g,
 		index: 1
 	});
 	
