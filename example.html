@@ -4,6 +4,15 @@
 		<title>Syntax demo</title>
 		<link rel="stylesheet" href="syntax.css" />
 		<script src="syntax.js"></script>
+		<style>
+			pre, code {
+				padding: 5px;
+				margin: 1em;
+				background-color: #ccc;
+				display: block;
+				white-space: pre;
+			}
+		</style>
 	</head>
 	<body>
 
@@ -12,7 +21,7 @@
 &lt;div id="test" class="class"&gt;This is a test.&lt;/div&gt;
 </pre>
 
-<pre data-syntax="js">
+<code data-syntax="js">
 /* sample code */
 Function.prototype.lol = function(context) {
 	var func = this;
@@ -20,16 +29,17 @@ Function.prototype.lol = function(context) {
 		return func.call(context, ":-)"); 
 	}
 }
-</pre>
+
+</code>
 
 <pre data-syntax="css">
 /* css */
 #id .class {
-	color: red;
+	<a href="#">color: red</a>;
 	font-size: 13px;
 }
 </pre>
 
-<script>Syntax.all();</script>
+	<script>Syntax.all();</script>
 	</body>
 </html>
